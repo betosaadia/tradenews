@@ -1,0 +1,168 @@
+<title>TRADENEWS</title>
+<style>
+/* Layout: masthead com wordmark, faixa de indicadores, duas tabelas de pizza lado a lado (empilham no celular) */
+:root{
+  --bg:#F2F4F6; --surface:#FFFFFF; --fg:#10181F; --muted:#5A6672; --line:#DDE2E7; --accent:#0C6E66; --nf:#C9D0D6; --other:#9AA5AF;
+  --c1:#1F8F82; --c2:#3B7DD8; --c3:#E0961F; --c4:#8E6BD1; --c5:#D9577A; --c6:#5BAA4B; --c7:#E2703A; --c8:#3FA9CC; --c9:#A0A93A; --c10:#B07A5B; --c11:#6F7F8F;
+  --font-display:'Bricolage Grotesque','Segoe UI',system-ui,sans-serif; --font-body:'IBM Plex Sans','Segoe UI',system-ui,sans-serif; --font-mono:'IBM Plex Mono',ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0C1215; --surface:#141C20; --fg:#E8EEF1; --muted:#8C9AA5; --line:#243038; --accent:#3CC3B4; --nf:#33414A; --other:#5F6E79;
+  --c1:#34B5A6; --c2:#5C9BF0; --c3:#F0AE45; --c4:#A88AE6; --c5:#EE7596; --c6:#79C468; --c7:#F28B55; --c8:#5FC3E4; --c9:#BCC553; --c10:#C99578; --c11:#8E9EAE; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0C1215; --surface:#141C20; --fg:#E8EEF1; --muted:#8C9AA5; --line:#243038; --accent:#3CC3B4; --nf:#33414A; --other:#5F6E79;
+  --c1:#34B5A6; --c2:#5C9BF0; --c3:#F0AE45; --c4:#A88AE6; --c5:#EE7596; --c6:#79C468; --c7:#F28B55; --c8:#5FC3E4; --c9:#BCC553; --c10:#C99578; --c11:#8E9EAE; color-scheme:dark}
+body{background:var(--bg);color:var(--fg);font-family:var(--font-body);font-size:14px;line-height:1.5}
+.wrap{max-width:1120px;margin:0 auto;padding-inline:16px;padding-block:24px 40px;display:flex;flex-direction:column;gap:20px}
+.mast{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap;border-bottom:2px solid var(--fg);padding-bottom:12px}
+.mast h1{font-family:var(--font-display);font-weight:800;font-size:clamp(28px,5vw,40px);letter-spacing:.02em;margin:0;line-height:1}
+.mast h1 span{color:var(--accent)}
+.mast p{margin:0;color:var(--muted);font-size:13px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+.kpi{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:14px;min-width:0}
+.kpi.main{border-color:var(--accent);box-shadow:inset 0 3px 0 var(--accent)}
+.kpi .l{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.kpi .v{font-family:var(--font-mono);font-weight:600;font-size:clamp(22px,3vw,28px);font-variant-numeric:tabular-nums;margin-top:4px;overflow-wrap:anywhere}
+.kpi .s{font-size:12px;color:var(--muted);margin-top:2px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,460px),1fr));gap:20px}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:18px;display:flex;flex-direction:column;gap:14px;min-width:0}
+.panel h2{font-family:var(--font-display);font-size:19px;margin:0;font-weight:700}
+.panel .sub{color:var(--muted);font-size:12.5px;margin:2px 0 0}
+.head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;flex-wrap:wrap}
+.tog{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--muted);cursor:pointer}
+.tog input{accent-color:var(--accent);width:16px;height:16px}
+.pie{position:relative;width:min(100%,300px);aspect-ratio:1;margin-inline:auto}
+.pie svg{width:100%;height:100%;display:block;overflow:visible}
+.pie path{stroke:var(--surface);stroke-width:2;transition:transform .15s;transform-origin:50% 50%;cursor:pointer}
+.pie path.on{transform:scale(1.04)}
+.pie path:focus-visible{outline:2px solid var(--fg)}
+.tip{position:absolute;pointer-events:none;background:var(--fg);color:var(--bg);padding:6px 9px;border-radius:4px;font-size:12px;white-space:nowrap;opacity:0;transform:translate(-50%,-120%);z-index:2}
+.leg{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+.leg li{display:grid;grid-template-columns:12px 1fr auto auto;gap:10px;align-items:center;padding:7px 6px;border-top:1px solid var(--line);border-radius:3px}
+.leg li.on{background:var(--bg)}
+.sw{width:12px;height:12px;border-radius:2px}
+.leg .n{min-width:0;overflow-wrap:anywhere}
+.leg .v,.leg .p{font-family:var(--font-mono);font-variant-numeric:tabular-nums;text-align:right}
+.leg .p{color:var(--muted);min-width:52px}
+.note{color:var(--muted);font-size:12px;margin:0}
+.det{border-top:1px solid var(--line);padding-top:8px}
+.det summary{cursor:pointer;color:var(--accent);font-size:12.5px}
+.tbl{overflow-x:auto;margin-top:8px}
+table{border-collapse:collapse;width:100%;font-size:12.5px}
+th,td{padding:5px 8px;text-align:right;border-top:1px solid var(--line);white-space:nowrap}
+th:first-child,td:first-child{text-align:left}
+td{font-family:var(--font-mono);font-variant-numeric:tabular-nums} td:first-child{font-family:var(--font-body)}
+th{font-weight:600;color:var(--muted);font-size:11px;letter-spacing:.06em;text-transform:uppercase}
+@media (prefers-reduced-motion:reduce){.pie path{transition:none}}
+</style>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@700;800&family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@400;500&display=swap">
+
+<div class="wrap">
+  <header class="mast">
+    <h1>TRADE<span>NEWS</span></h1>
+    <p>Base de contatos dos grupos · cada telefone da coluna B conta uma vez · clientes cruzados com a planilha de apoio</p>
+  </header>
+
+  <section class="kpis" id="kpis"></section>
+
+  <section class="grid">
+    <article class="panel">
+      <div class="head">
+        <div><h2>Usuários por sub_area</h2><p class="sub">Telefones únicos em cada sub_area, já com os clientes da planilha de apoio</p></div>
+        <label class="tog" for="nf"><input type="checkbox" id="nf">Incluir não encontrados</label>
+      </div>
+      <div class="pie" id="pie1"></div>
+      <ul class="leg" id="leg1"></ul>
+    </article>
+    <article class="panel">
+      <div class="head"><div><h2>AUC por sub_area</h2><p class="sub">Soma do AUC de cada telefone único, em reais</p></div></div>
+      <div class="pie" id="pie2"></div>
+      <ul class="leg" id="leg2"></ul>
+      <p class="note" id="aucnote"></p>
+    </article>
+  </section>
+
+  <details class="panel det" open>
+    <summary>Todas as sub_areas</summary>
+    <div class="tbl"><table id="tbl"></table></div>
+  </details>
+</div>
+
+<script>
+const D=__DATA__;
+const NF='NÃO_ENCONTRADO', TOP=7;
+const nInt=new Intl.NumberFormat('pt-BR');
+const pct=v=>(v*100).toLocaleString('pt-BR',{minimumFractionDigits:1,maximumFractionDigits:1})+'%';
+const brl=v=>{const a=Math.abs(v),s=v<0?'-':'';
+  if(a>=1e9)return s+'R$ '+(a/1e9).toLocaleString('pt-BR',{maximumFractionDigits:2})+' bi';
+  if(a>=1e6)return s+'R$ '+(a/1e6).toLocaleString('pt-BR',{maximumFractionDigits:1})+' mi';
+  if(a>=1e3)return s+'R$ '+(a/1e3).toLocaleString('pt-BR',{maximumFractionDigits:1})+' mil';
+  return s+'R$ '+a.toLocaleString('pt-BR',{maximumFractionDigits:0});};
+const brlFull=v=>'R$ '+v.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
+
+const colorOf={}; const idents=D.rows.filter(r=>r.area!==NF);
+// sub_areas que só aparecem em uma pizza ganham as cores restantes por usuários
+const usedTop=new Set();
+function topN(key,list){return [...list].filter(r=>r[key]>0).sort((a,b)=>b[key]-a[key]);}
+[ 'users','auc' ].forEach(k=>topN(k,idents).slice(0,TOP).forEach(r=>usedTop.add(r.area)));
+const pal=[1,2,3,4,5,6,7,8,9,10,11].map(i=>`var(--c${i})`);
+let ci=0;
+[...usedTop].forEach(a=>colorOf[a]=pal[ci++%pal.length]);
+
+// KPIs
+const K=D.kpi;
+document.getElementById('kpis').innerHTML=[
+ ['main','Usuários totais',nInt.format(K.users),`telefones únicos da coluna B`],
+ ['','Linhas na planilha',nInt.format(K.rows),`${nInt.format(K.dups)} repetidas removidas`],
+ ['','Clientes identificados',nInt.format(K.ident),`${pct(K.ident/K.users)} dos usuários`],
+ ['','Novos pela planilha de apoio',`+${nInt.format(K.new)}`,`${nInt.format(K.newSim)} marcados como cliente Nomos`],
+ ['','Ainda não encontrados',nInt.format(K.nf),`${pct(K.nf/K.users)} dos usuários, eram ${nInt.format(K.nf0)}`],
+ ['','AUC total',brl(K.auc),`${brl(K.aucNew)} vindos da planilha de apoio`]
+].map(([c,l,v,s])=>`<div class="kpi ${c}"><div class="l">${l}</div><div class="v">${v}</div><div class="s">${s}</div></div>`).join('');
+
+function slices(key,includeNF){
+  const list=D.rows.filter(r=>r.area!==NF&&r[key]>0).sort((a,b)=>b[key]-a[key]);
+  const named=list.slice(0,TOP), over=list.slice(TOP);
+  const nm=r=>r.area==='SEM SUB_AREA'?'Sem sub_area (0)':r.area;
+  const out=named.map(r=>({label:nm(r),val:r[key],color:colorOf[r.area]}));
+  if(over.length)out.push({label:`Outras (${over.length})`,val:over.reduce((s,r)=>s+r[key],0),color:'var(--other)'});
+  if(includeNF){const n=D.rows.find(r=>r.area===NF);out.push({label:'Não encontrado',val:n[key],color:'var(--nf)'});}
+  return out.sort((x,y)=>(x.color==='var(--other)')-(y.color==='var(--other)')||y.val-x.val);
+}
+function draw(id,legId,data,fmt){
+  const tot=data.reduce((s,d)=>s+d.val,0), R=100, cx=110, cy=110;
+  let a=-Math.PI/2, paths='';
+  data.forEach((d,i)=>{
+    const f=d.val/tot, b=a+f*2*Math.PI, big=f>.5?1:0;
+    const p=f>=.9999?`M${cx} ${cy-R}A${R} ${R} 0 1 1 ${cx-.01} ${cy-R}Z`:
+      `M${cx} ${cy}L${cx+R*Math.cos(a)} ${cy+R*Math.sin(a)}A${R} ${R} 0 ${big} 1 ${cx+R*Math.cos(b)} ${cy+R*Math.sin(b)}Z`;
+    paths+=`<path d="${p}" fill="${d.color}" data-i="${i}" tabindex="0"><title>${d.label}: ${fmt(d.val)}</title></path>`;
+    a=b;
+  });
+  const box=document.getElementById(id);
+  box.innerHTML=`<svg viewBox="0 0 220 220" role="img" aria-label="Gráfico de pizza">${paths}</svg><div class="tip"></div>`;
+  const leg=document.getElementById(legId);
+  leg.innerHTML=data.map((d,i)=>`<li data-i="${i}"><span class="sw" style="background:${d.color}"></span><span class="n">${d.label}</span><span class="v">${fmt(d.val)}</span><span class="p">${pct(d.val/tot)}</span></li>`).join('');
+  const tip=box.querySelector('.tip'), ps=[...box.querySelectorAll('path')], ls=[...leg.children];
+  const set=(i,on)=>{ps[i].classList.toggle('on',on);ls[i].classList.toggle('on',on)};
+  ps.forEach((p,i)=>{
+    p.addEventListener('mousemove',e=>{const r=box.getBoundingClientRect();tip.style.left=(e.clientX-r.left)+'px';tip.style.top=(e.clientY-r.top)+'px';tip.style.opacity=1;tip.textContent=`${data[i].label}: ${fmt(data[i].val)} (${pct(data[i].val/tot)})`;set(i,true)});
+    p.addEventListener('mouseleave',()=>{tip.style.opacity=0;set(i,false)});
+    p.addEventListener('focus',()=>set(i,true));p.addEventListener('blur',()=>set(i,false));
+  });
+  ls.forEach((l,i)=>{l.addEventListener('mouseenter',()=>set(i,true));l.addEventListener('mouseleave',()=>set(i,false))});
+}
+const nf=document.getElementById('nf');
+const r1=()=>draw('pie1','leg1',slices('users',nf.checked),v=>nInt.format(v));
+nf.addEventListener('change',r1); r1();
+draw('pie2','leg2',slices('auc',false),brl);
+const neg=D.rows.filter(r=>r.auc<0);
+document.getElementById('aucnote').textContent='O AUC soma saldos de clientes identificados, incluindo contas zeradas ou negativas. Os '+nInt.format(K.new)+' clientes novos usam o AUC da planilha de apoio ('+brl(K.aucNew)+'), que é uma foto de outra data. Total: '+brlFull(K.auc)+'.';
+
+// tabela completa
+const tot={u:D.rows.reduce((s,r)=>s+r.users,0),a:D.rows.filter(r=>r.area!==NF).reduce((s,r)=>s+r.auc,0),u2:K.new,a2:K.aucNew};
+document.getElementById('tbl').innerHTML='<tr><th>Sub_area</th><th>Usuários</th><th>% usuários</th><th>Novos (apoio)</th><th>AUC</th><th>% AUC</th></tr>'+
+ [...D.rows].sort((a,b)=>b.users-a.users).map(r=>{const isNF=r.area===NF;
+  return `<tr><td>${r.area}</td><td>${nInt.format(r.users)}</td><td>${pct(r.users/tot.u)}</td><td>${isNF?'':r.u2?'+'+nInt.format(r.u2):'0'}</td><td>${isNF?'n/d':brlFull(r.auc)}</td><td>${isNF?'n/d':pct(r.auc/tot.a)}</td></tr>`}).join('')+
+ `<tr><td><b>Total</b></td><td>${nInt.format(tot.u)}</td><td>100,0%</td><td>+${nInt.format(tot.u2)}</td><td>${brlFull(tot.a)}</td><td>100,0%</td></tr>`;
+</script>

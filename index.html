@@ -64,7 +64,6 @@ th{font-weight:600;color:var(--muted);font-size:11px;letter-spacing:.06em;text-t
 <div class="wrap">
   <header class="mast">
     <h1>TRADE<span>NEWS</span></h1>
-    <p>Base de contatos dos grupos · cada telefone da coluna B conta uma vez · clientes cruzados com a planilha de apoio</p>
   </header>
 
   <section class="kpis" id="kpis"></section>
@@ -117,9 +116,7 @@ let ci=0;
 const K=D.kpi;
 document.getElementById('kpis').innerHTML=[
  ['main','Usuários totais',nInt.format(K.users),`telefones únicos da coluna B`],
- ['','Linhas na planilha',nInt.format(K.rows),`${nInt.format(K.dups)} repetidas removidas`],
  ['','Clientes identificados',nInt.format(K.ident),`${pct(K.ident/K.users)} dos usuários`],
- ['','Novos pela planilha de apoio',`+${nInt.format(K.new)}`,`${nInt.format(K.newSim)} marcados como cliente Nomos`],
  ['','Ainda não encontrados',nInt.format(K.nf),`${pct(K.nf/K.users)} dos usuários, eram ${nInt.format(K.nf0)}`],
  ['','AUC total',brl(K.auc),`${brl(K.aucNew)} vindos da planilha de apoio`]
 ].map(([c,l,v,s])=>`<div class="kpi ${c}"><div class="l">${l}</div><div class="v">${v}</div><div class="s">${s}</div></div>`).join('');
